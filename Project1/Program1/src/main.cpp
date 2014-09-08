@@ -4,6 +4,6 @@
 int main(int argc, char *argv[])
 {
     Match m;
-    m.getJetTeamInfo();
+    m.run();
     return 0;
 }
