@@ -5,11 +5,6 @@ Player::Player()
 
 }
 
-Player::Player(int code, string name, int tagAmt, int points, int codeTagged):
-    code(code), name(name), tagAmt(tagAmt), points(points), codeTagged(codeTagged){
-
-}
-
 void Player::insertCode(int code, int teamAmt, int position){
     codeTagged.resize(teamAmt);
     if(position >= 0)

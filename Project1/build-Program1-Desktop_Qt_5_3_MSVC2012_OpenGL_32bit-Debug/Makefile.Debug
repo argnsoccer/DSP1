@@ -215,7 +215,9 @@ debug\main.obj: ..\Program1\src\main.cpp C:\Qt\5.3\msvc2012_opengl\include\QtCor
 		C:\Qt\5.3\msvc2012_opengl\include\QtCore\qcontainerfwd.h \
 		C:\Qt\5.3\msvc2012_opengl\include\QtCore\qisenum.h \
 		C:\Qt\5.3\msvc2012_opengl\include\QtCore\qobject_impl.h \
-		C:\Qt\5.3\msvc2012_opengl\include\QtCore\qeventloop.h
+		C:\Qt\5.3\msvc2012_opengl\include\QtCore\qeventloop.h \
+		..\Program1\src\match.h \
+		..\Program1\src\player.h
 
 debug\match.obj: ..\Program1\src\match.cpp ..\Program1\src\match.h \
 		..\Program1\src\player.h

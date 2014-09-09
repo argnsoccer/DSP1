@@ -10,24 +10,26 @@ class Match
 {
 public:
     Match();
-    void getJetTeamInfo();
-    void getBearTeamInfo();
-    void printTest();
-    void getMatchInfo();
-    void setPlayerInfo();
+
+    void run(char *teamName1, char *teamName2, char *matchFile, char *outputFile, string verbosityType);
     void teamTally();
-    void OutputVLow();
-    void run();
-    void OutputVMed();
-    void OutputVHigh();
+    void getJetTeamInfo(char* teamName1);
+    void getBearTeamInfo(char* teamName2);
+    void getMatchInfo(char* matchFile);
+    void setPlayerInfo();
+    void OutputVLow(char* outputFile);
+    void OutputVMed(char* outputFile);
+    void OutputVHigh(char* outputFile);
 
 private:
     ifstream fileReader;
     ofstream fileOutput;
     string TeamName1, TeamName2;
     int teamAmt1, teamAmt2;
-    int tagAmt, points, jetTeamPoints, bearTeamPoints;
+    int tagAmt, points;
     int fileCodes;
+    int jetTeamPoints;
+    int bearTeamPoints;
     string playerName;
     Player* bearTeam;
     Player* jetTeam;

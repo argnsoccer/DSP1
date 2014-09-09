@@ -6,9 +6,37 @@ Match::Match()
 
 }
 
-void Match::getJetTeamInfo()
+
+void Match::run(char* teamName1, char* teamName2, char* matchFile, char* outputFile, string verbosityType)
 {
-   fileReader.open("c:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/Jets.txt");
+    getJetTeamInfo(teamName1);
+    getBearTeamInfo(teamName2);
+    getMatchInfo(matchFile);
+    setPlayerInfo();
+    if(verbosityType == "vlow")
+    {
+        OutputVLow(outputFile);
+    }
+    else if(verbosityType == "vmed")
+    {
+        OutputVMed(outputFile);
+    }
+    else if(verbosityType == "vhigh")
+    {
+        OutputVHigh(outputFile);
+    }
+
+    delete [] jetTeam;
+    delete [] bearTeam;
+    delete [] tagged;
+    delete [] taggers;
+    delete [] timeTagged;
+    delete [] placeTagged;
+}
+
+void Match::getJetTeamInfo(char* teamName1)
+{
+   fileReader.open(teamName1);
    if(fileReader.is_open())
    {
        getline (fileReader, TeamName1);//gets the first line of the file and sets the line as a null terminated c-string
@@ -28,9 +56,9 @@ void Match::getJetTeamInfo()
    }
 }
 
-void Match::getBearTeamInfo()//same as the other team method
+void Match::getBearTeamInfo(char* teamName2)//same as the other team method
 {
-   fileReader.open("C:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/Sunbears.txt");
+   fileReader.open(teamName2);
    if(fileReader.is_open())
    {
        getline(fileReader, TeamName2);
@@ -51,9 +79,9 @@ void Match::getBearTeamInfo()//same as the other team method
    }
 }
 
-void Match::getMatchInfo()//used to gather the information from the match file and place them into unique arrays to then populate the players specific data
+void Match::getMatchInfo(char* matchFile)//used to gather the information from the match file and place them into unique arrays to then populate the players specific data
 {
-   fileReader.open("C:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/Match1.txt");
+   fileReader.open(matchFile);
    if(fileReader.is_open())
    {
        fileReader >> tagAmt;//gathers the first character, the amount of tags made
@@ -72,59 +100,22 @@ void Match::getMatchInfo()//used to gather the information from the match file a
 
        fileReader.close();
    }
-   //printTest();
-}
-
-void Match::printTest()//method used in development for checking different printouts of team names and making sure certain info has been successfully retrieved
-{
-    /*cout << TeamName1 << endl;
-    cout << teamAmt1 << endl;
-    cout << TeamName2 << endl;
-    cout << teamAmt2 << endl;
-    for(int x = 0; x < teamAmt2; ++x)
-    {
-        cout << bearTeam[x].getCode() << endl;
-        cout << bearTeam[x].getName() << endl;
-    }*/
-    /*cout << tagAmt << endl;
-    for(int a = 0; a < tagAmt; ++a)
-    {
-        cout << taggers[a] << endl;
-        cout << tagged[a] << endl;
-        cout << timeTagged[a] << endl;
-        cout << placeTagged[a] << endl;
-    }*/
-    for(int a = 0; a < tagAmt; ++a)
-    {
-        cout << tagged[a] << endl;
-    }
-    for(int b = 0; b < teamAmt1; ++b)
-    {
-        for(int c = 0; c < jetTeam[b].getCodeTaggedSize(); ++c)
-        {
-           cout << jetTeam[b].getName() << " has tagged " << jetTeam[b].getCodeTagged(c) << " " << jetTeam[b].getTagAmtperPerson(c) << " times" << endl;
-
-        }
-    }
-    for(int d = 0; d < teamAmt2; ++d)
-    {
-        for(int e = 0; e < bearTeam[d].getCodeTaggedSize(); ++e)
-        {
-            cout << bearTeam[d].getName() << " has tagged " << bearTeam[d].getCodeTagged(e) << " " << bearTeam[d].getTagAmtperPerson(e) << " times" << endl;
-        }
-    }
-
-    cout << jetTeam[0].getTagAmtSize() << endl;
-    cout << jetTeam[1].getTagAmtSize() << endl;
-    cout << jetTeam[2].getTagAmtSize() << endl;
 }
 
 void Match::setPlayerInfo()
 {
     int count1 = 1;
     int count2 = 1;
-    int tagNum1 = 0;
-    int tagNum2 = 0;
+    int * tagNum1 = new int [teamAmt1];//creates an array for the amount of tags one specific player has against another specific player
+    int * tagNum2 = new int [teamAmt2];
+    for(int a = 0; a < teamAmt1; ++a)
+    {
+        tagNum1[a] = 1;
+    }
+    for(int b = 0; b < teamAmt2; ++b)
+    {
+        tagNum2[b] = 1;
+    }
     for(int i = 0; i < tagAmt; ++i)//iterates through the lines of information to set the necessary info for each object
     {
         for(int j = 0; j < teamAmt1; ++j)//iterates through first team to set the taggers
@@ -155,16 +146,18 @@ void Match::setPlayerInfo()
                    points = jetTeam[j].getPoints() + points;//makes sure the points don't overwrite each other
                    jetTeam[j].setPoints(points);
 
+
                for(int k = 0; k < teamAmt2; ++k)//iterates through the other team's players
                {
                    if(tagged[i] == bearTeam[k].getCode())//if the code in the tagged array matches a code on the bear team's players
                    {
-                       if(jetTeam[j].getCodeTagged(k) >= 0)
+                       if(jetTeam[j].getCodeTagged(k) > 0)//checks to make sure that if someone has been tagged before that specific tag incremements properly
                        {
-                           tagNum1++;
+                           tagNum1[j]++;
                        }
                        jetTeam[j].insertCode(tagged[i], teamAmt2, k);//inserts that code into a vector of the size of the other team to determine who on the jet team tagged who on the bear team
-                       jetTeam[j].insertTags(tagNum1, teamAmt2, k);//a separate vector that tracks the amount of tags on each person
+                       jetTeam[j].insertTags(tagNum1[j], teamAmt2, k);//a separate vector that tracks the amount of tags on each person
+
                    }
                }
             }
@@ -201,18 +194,16 @@ void Match::setPlayerInfo()
                 }
                     points = bearTeam[x].getPoints() + points;
                     bearTeam[x].setPoints(points);
-                    for(int f = 0; f < teamAmt1; ++f)
+
+                for(int f = 0; f < teamAmt1; ++f)
+                {
+                    if(tagged[i] == jetTeam[f].getCode())
                     {
-                        if(tagged[i] == jetTeam[f].getCode())
-                        {
-                            if(bearTeam[x].getCodeTagged(f) >= 0)
-                            {
-                                tagNum2++;
-                            }
-                            bearTeam[x].insertCode(tagged[i], teamAmt1, f);
-                            bearTeam[x].insertTags(tagNum2, teamAmt1, f);
-                        }
+                        bearTeam[x].insertCode(tagged[i], teamAmt1, f);
+                        bearTeam[x].insertTags(tagNum2[x], teamAmt1, f);
+                        tagNum2[x]++;
                     }
+                }
             }
             else
             {
@@ -221,6 +212,8 @@ void Match::setPlayerInfo()
             }
         }
     }
+    delete[] tagNum1;
+    delete [] tagNum2;
 }
 
 void Match::teamTally()//adds up the scores of each team to then output in the files
@@ -229,18 +222,19 @@ void Match::teamTally()//adds up the scores of each team to then output in the f
     bearTeamPoints = 0;
     for(int i = 0; i < teamAmt1; ++i)
     {
-        jetTeamPoints = jetTeamPoints + jetTeam[i].getPoints();
+        jetTeamPoints+=jetTeam[i].getPoints();
     }
     for(int j = 0; j < teamAmt2; ++j)
     {
-        bearTeamPoints = bearTeamPoints + bearTeam[j].getPoints();
+        bearTeamPoints+=bearTeam[j].getPoints();
     }
 }
 
-void Match::OutputVLow()
+void Match::OutputVLow(char* outputFile)
 {
+
+   fileOutput.open(outputFile);
    teamTally();
-   fileOutput.open("C:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/vlow.txt");
    fileOutput << TeamName1 << ": " << jetTeamPoints << " points" << endl;
    fileOutput << TeamName2 << ": " << bearTeamPoints << " points" << endl;
    if(jetTeamPoints > bearTeamPoints)
@@ -257,14 +251,14 @@ void Match::OutputVLow()
    fileOutput.close();
 }
 
-void Match::OutputVMed()
+void Match::OutputVMed(char* outputFile)
 {
     teamTally();
     int bestScore1 = 0;
     string bestScore1Name ="";
     string bestScore2Name = "";
     int bestScore2 = 0;
-    fileOutput.open("C:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/vmed.txt");
+    fileOutput.open(outputFile);
     fileOutput << TeamName1 << endl;
     bool min = false;
     int index = 0;
@@ -383,35 +377,46 @@ void Match::OutputVMed()
 
 }
 
-void Match::OutputVHigh()
+void Match::OutputVHigh(char* outputFile)
 {
     teamTally();
-    fileOutput.open("C:/Users/argns_000/DataStructuresRepo/Project1/Program1/doc/vhigh.txt");
+    fileOutput.open(outputFile);
     fileOutput << TeamName1 << endl;
     for(int i = 0; i < teamAmt1; ++i)
     {
         for(int j = 0; j < teamAmt2; ++j)
         {
-            int tagCounter = 0;
-            if(jetTeam[i].getCodeTagged(j) == bearTeam[j].getCode())
-            {
-                tagCounter++;
-            }
-            fileOutput << "\t" << jetTeam[i].getName() << " tagged" << bearTeam[j].getName() << " " << tagCounter << " times" << endl;
+            fileOutput << "\t" << jetTeam[i].getName() << " tagged" << bearTeam[j].getName() << " " << jetTeam[i].getTagAmtperPerson(j) << " times" << endl;
         }
+        fileOutput << "\t" << jetTeam[i].getName() << " had a total of " << jetTeam[i].getTagAmt() << " tags" << endl;
     }
+    fileOutput << "\t " << TeamName1 << ": " << jetTeamPoints << " points" << endl << endl;
+
+    fileOutput << TeamName2 << endl;
+    for (int k = 0; k < teamAmt2; ++k)
+    {
+        for(int l = 0; l < teamAmt1; ++l)
+        {
+            fileOutput << "\t" << bearTeam[k].getName() << " tagged" << jetTeam[l].getName() << " " << bearTeam[k].getTagAmtperPerson(l) << " times" << endl;
+        }
+        fileOutput << "\t" << bearTeam[k].getName() << " had a total of " << bearTeam[k].getTagAmt() << " tags" << endl;
+    }
+    fileOutput << "\t " << TeamName2 << ": " << bearTeamPoints << " points" << endl << endl;
+
+    if(jetTeamPoints > bearTeamPoints)
+    {
+        fileOutput << "Overall Winners: " << TeamName1 << endl;
+    }
+    else if(jetTeamPoints < bearTeamPoints)
+    {
+        fileOutput << "Overall Winners: " << TeamName2 << endl;
+    }
+    else
+        fileOutput << TeamName1 << " have tied " << TeamName2 << endl;
+
+    fileOutput.close();
+
 
 }
 
-void Match::run()
-{
-    getJetTeamInfo();
-    getBearTeamInfo();
-    getMatchInfo();
-    setPlayerInfo();
-    OutputVLow();
-    OutputVMed();
-    OutputVHigh();
-    printTest();
-}
 

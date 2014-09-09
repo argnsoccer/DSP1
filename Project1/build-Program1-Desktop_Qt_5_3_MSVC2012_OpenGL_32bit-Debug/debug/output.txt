@@ -1,0 +1,31 @@
+The Jets
+	 Cristiano tagged Leonel 0 times
+	 Cristiano tagged Andres 0 times
+	 Cristiano tagged Jordi 0 times
+	 Cristiano had a total of 0 tags
+	 Xabi tagged Leonel 1 times
+	 Xabi tagged Andres 1 times
+	 Xabi tagged Jordi 0 times
+	 Xabi had a total of 2 tags
+	 Sergio tagged Leonel 0 times
+	 Sergio tagged Andres 2 times
+	 Sergio tagged Jordi 0 times
+	 Sergio had a total of 2 tags
+	 The Jets: 33 points
+
+The Sunbears
+	 Leonel tagged Cristiano 0 times
+	 Leonel tagged Xabi 1 times
+	 Leonel tagged Sergio 0 times
+	 Leonel had a total of 1 tags
+	 Andres tagged Cristiano 0 times
+	 Andres tagged Xabi 0 times
+	 Andres tagged Sergio 0 times
+	 Andres had a total of 0 tags
+	 Jordi tagged Cristiano 1 times
+	 Jordi tagged Xabi 0 times
+	 Jordi tagged Sergio 0 times
+	 Jordi had a total of 1 tags
+	 The Sunbears: 18 points
+
+Overall Winners: The Jets

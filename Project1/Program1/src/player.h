@@ -9,7 +9,6 @@ class Player
 {
 public:
     Player();
-    Player(int code, string name, int tagAmt, int points, int codeTagged);
 
     void setCode(int code);
     int getCode();
@@ -40,25 +39,6 @@ private:
     vector<int> tagAmtPerPerson;
 };
 
-inline int Player::getTagAmtperPerson(int position)
-{
-    return tagAmtPerPerson.at(position);
-}
-
-inline int Player::getTagAmtSize()
-{
-    return tagAmtPerPerson.size();
-}
-
-inline int Player::getCodeTagged(int position)
-{
-   return codeTagged.at(position);
-}
-
-inline int Player::getCodeTaggedSize()
-{
-    return codeTagged.size();
-}
 
 inline void Player::setCode(int code)
 {
@@ -99,4 +79,24 @@ inline int Player::getPoints()
 {
     return points;
 }
+inline int Player::getCodeTagged(int position)
+{
+   return codeTagged.at(position);
+}
+
+inline int Player::getCodeTaggedSize()
+{
+    return codeTagged.size();
+}
+inline int Player::getTagAmtperPerson(int position)
+{
+    return tagAmtPerPerson.at(position);
+}
+
+inline int Player::getTagAmtSize()
+{
+    return tagAmtPerPerson.size();
+}
+
+
 #endif // PLAYER_H
