@@ -5,6 +5,13 @@ FileReader::FileReader()
 
 }
 
+
+//FileReader::~FileReader() wouldn't work for some reason. Tried and tried
+//{
+//    delete []words;
+//    delete []pages;
+//}
+
 void FileReader::input(char*input, char*output)
 {
 
@@ -39,7 +46,7 @@ void FileReader::input(char*input, char*output)
                 else
                 {
                     fileReader >> pages[wordSizeCount][pageSizeCount];//puts the page number into the array
-                    tempPage = pages[wordSizeCount][pageSizeCount];//stores the page number for allocation into the parallel array
+                    tempPage = pages[wordSizeCount][pageSizeCount];//stores the page number into the parallel array
                 }
             }
             temp = fileReader.get();// gets the >
@@ -68,7 +75,7 @@ void FileReader::input(char*input, char*output)
                         {
                             words[wordSizeCount][bufferSize] = fileReader.get();//puts each char into words
                             cout << words[wordSizeCount][bufferSize];
-                            bufferSize++;//increments to put the next char in the corresponding place
+                            bufferSize++;//increments to place next char
                             cout << "count: " << count << endl;
                             if(count == 10)//checks resize it
                             {
@@ -193,9 +200,4 @@ void FileReader::resizeCharsinWords(int &oldSize, int wordSizeCount)
     words[wordSizeCount] = temp;
 }
 
-//FileReader::~FileReader()
-//{
-//    delete []words;
-//    delete []pages;
-//}
 

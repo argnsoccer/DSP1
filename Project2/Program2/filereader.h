@@ -10,6 +10,7 @@ class FileReader
 
 public:
     FileReader();
+   // ~FileReader(); wouldn't work for some reason
     void input(char *input, char *output);
     void resizeWords(int oldSize);
     void resizePages(int &oldSize);
