@@ -19,16 +19,19 @@ void FileReader::input(char*input, char*output)
     int pageSizeCount=0;
     int wordSizeCount=0;
     int bufferSize = 0;
+    int superCount = 0;
     if(fileReader.is_open())
     {
+
         while(fileReader.eof() == false)
         {
+
         int tempPage = 0;
 
             char temp = fileReader.get();//gets the first char of the file
             if(temp == 60)//if the char is a < then
             {
-                char checkPage = fileReader.peek(); //checks if the next char is a hyphen without moving the iterator
+                char checkPage = fileReader.peek(); //checks if the next char is a hyphen
                 if(checkPage == 45)
                 {
                     cout << "no more pages to read" << endl;
@@ -40,14 +43,14 @@ void FileReader::input(char*input, char*output)
                 }
             }
             temp = fileReader.get();// gets the >
-            temp = fileReader.get();//gets the \n to move the cursor to the first char
+            temp = fileReader.get();//gets the \n
             for(int i = 0; i <= pageSizeCount; ++i)
             {
                 cout << pages[wordSizeCount][i] << endl;
             }
-            char checkWord = fileReader.peek(); //checks the next character to make sure it is not a white space
+            char checkWord = fileReader.peek(); //checks white space
             cout << "checkword is " << checkWord << endl;
-            int superCount = 0;
+
             while(checkWord != '<')
             {
                 bufferSize = 0;
@@ -60,18 +63,22 @@ void FileReader::input(char*input, char*output)
                     while(checkWord != ']')
                     {
                         cout << " in checkword ]" << endl;
-                        words[wordSizeCount][bufferSize] = fileReader.get();//puts each char into words
-                        cout << words[wordSizeCount][bufferSize];
-                        bufferSize++;//increments to put the next char in the corresponding place
-                        cout << "count: " << count << endl;
-                        if(count == 9)//check if the array is at 9 spots to resize it
+                        checkWord = fileReader.peek();
+                        if(checkWord != ']')
                         {
-                            cout << "in if" << endl;
-                            resizeCharsinWords(words, bufferSize, wordSizeCount);
+                            words[wordSizeCount][bufferSize] = fileReader.get();//puts each char into words
+                            cout << words[wordSizeCount][bufferSize];
+                            bufferSize++;//increments to put the next char in the corresponding place
+                            cout << "count: " << count << endl;
+                            if(count == 10)//checks resize it
+                            {
+                                cout << "in if" << endl;
+                                resizeCharsinWords(bufferSize, wordSizeCount);
+                            }
+                            count++;
                         }
-                        count++;
 
-                        checkWord = fileReader.peek();//checks the next char to see if the while should break
+                        checkWord = fileReader.peek();//break check
                     }
                 }
                 else
@@ -81,19 +88,19 @@ void FileReader::input(char*input, char*output)
                     {
                         cout << " in checkword space" << endl;
                         cout << "wordSizeCount in while: " << wordSizeCount << endl;
-                        words[wordSizeCount][bufferSize] = fileReader.get();
-                        cout << words[wordSizeCount][bufferSize] << endl;
+                        words[wordSizeCount][bufferSize] = fileReader.get();//breaks here on the 11th word, meaning the resize is not working correctly
+                        cout << words[wordSizeCount][bufferSize] << endl;//I am stuck here because I cannot figure out how to fix the resize so I can proceed to sort and output
                         bufferSize++;
                         cout << "count: " << count << endl;
-                        if(count == 9)
+                        if(count == 10)
                         {
                             cout << "in if" << endl;
-                            resizeCharsinWords(words, bufferSize, wordSizeCount);
+                            resizeCharsinWords(bufferSize, wordSizeCount);
                         }
                         count++;
 
                         checkWord = fileReader.peek();
-                        if(checkWord == '\n')//this break is put in because before, it would check the \n then the next iteration would read in the \n into temp and this broke the automatic reading in
+                        if(checkWord == '\n')//break case to reset new page
                         {
                             break;
                         }
@@ -109,12 +116,14 @@ void FileReader::input(char*input, char*output)
                     }
                 }
 
-                wordSizeCount++;
-                superCount++;
-                if(superCount == 8)
+                wordSizeCount++;//a word has just been added so go to the next place in the words array
+                superCount++;//increments capacity
+                cout << "superCount is: " << superCount << endl;
+                if(superCount == 10)
                 {
-                    resizeWords(words, wordSizeCount);
-                    resizePages(pages, wordSizeCount);
+                    resizeWords(wordSizeCount);
+                    resizePages(wordSizeCount);
+                    superCount = 0;//resets (tracking capacity)
                 }
 
                 temp = fileReader.get();
@@ -128,35 +137,36 @@ void FileReader::input(char*input, char*output)
 
             for(int j = 0; j < wordSizeCount; ++j)
             {
-                pages[j][pageSizeCount] = tempPage;
+                pages[j][pageSizeCount] = tempPage; // updates pages for words
             }
-
             cout << endl;
-
         }
     }
 }
 
-void FileReader::resizeWords(char **&chararr, int oldSize)
+void FileReader::resizeWords(int oldSize)//no clue why this is not working have stared at it for 3 hours (and counting)
 {
     char ** temp = new char*[oldSize+10];
     for(int i = 0; i < oldSize; ++i)
     {
-        temp[i] = chararr[i];
+        temp[i] = words[i];
+        cout << "in resize for " << endl;
+        //delete [] chararr[i];
     }
-    delete [] chararr;
-    chararr = temp;
+    delete [] words;
+    words = temp;
 }
 
-void FileReader::resizePages(int **&intarr, int &oldSize)
+void FileReader::resizePages(int &oldSize)
 {
     int ** temp = new int*[oldSize+10];
     for(int i = 0; i < oldSize; ++i)
     {
-        temp[i] = intarr[i];
+        temp[i] = pages[i];
+        //delete [] intarr[i];
     }
-    delete [] intarr;
-    intarr = temp;
+    //delete [] intarr;
+    pages = temp;
 }
 
 void FileReader::resizeIntsinPages(int **&intarr, int &oldSize, int wordSizeCount)
@@ -170,17 +180,17 @@ void FileReader::resizeIntsinPages(int **&intarr, int &oldSize, int wordSizeCoun
     intarr[wordSizeCount] = temp;
 }
 
-void FileReader::resizeCharsinWords(char **&chararr, int &oldSize, int wordSizeCount)
+void FileReader::resizeCharsinWords(int &oldSize, int wordSizeCount)
 {
     char * temp = new char[oldSize+10];
     cout << "wordSizeCount in resize: " << wordSizeCount << endl;
     for(int i = 0; i < oldSize; ++i)
     {
-        temp[i] = chararr[wordSizeCount][i];
+        temp[i] = words[wordSizeCount][i];
         cout << "temp[i]: " << temp[i];
 
     }
-    chararr[wordSizeCount] = temp;
+    words[wordSizeCount] = temp;
 }
 
 //FileReader::~FileReader()

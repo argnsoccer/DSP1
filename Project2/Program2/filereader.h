@@ -11,9 +11,9 @@ class FileReader
 public:
     FileReader();
     void input(char *input, char *output);
-    void resizeWords(char **&chararr, int oldSize);
-    void resizePages(int **& intarr, int &oldSize);
-    void resizeCharsinWords(char ** &chararr, int &oldSize, int wordSizeCount);
+    void resizeWords(int oldSize);
+    void resizePages(int &oldSize);
+    void resizeCharsinWords(int &oldSize, int wordSizeCount);
     void resizeIntsinPages(int **& intarr, int &oldSize, int wordSizeCount);
 
 
