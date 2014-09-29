@@ -11,15 +11,15 @@ class Match
 public:
     Match();
 
-    void run(char *teamName1, char *teamName2, char *matchFile, char *outputFile, string verbosityType);
-    void teamTally();
-    void getJetTeamInfo(char* teamName1);
-    void getBearTeamInfo(char* teamName2);
-    void getMatchInfo(char* matchFile);
-    void setPlayerInfo();
-    void OutputVLow(char* outputFile);
-    void OutputVMed(char* outputFile);
-    void OutputVHigh(char* outputFile);
+    void run(const char* &teamName1, const char* &teamName2, const char* &matchFile, const char* &outputFile, const string &verbosityType);
+        void teamTally();
+        void getJetTeamInfo(const char *&teamName1);
+        void getBearTeamInfo(const char *&teamName2);
+        void getMatchInfo(const char*& matchFile);
+        void setPlayerInfo();
+        void OutputVLow(const char* &outputFile);
+        void OutputVMed(const char* &outputFile);
+        void OutputVHigh(const char* &outputFile);
 
 private:
     ifstream fileReader;

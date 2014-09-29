@@ -7,7 +7,7 @@ Match::Match()
 }
 
 
-void Match::run(char* teamName1, char* teamName2, char* matchFile, char* outputFile, string verbosityType)
+void Match::run(const char *&teamName1, const char *&teamName2, const char *&matchFile, const char *&outputFile, const string &verbosityType)
 {
     getJetTeamInfo(teamName1);
     getBearTeamInfo(teamName2);
@@ -34,21 +34,21 @@ void Match::run(char* teamName1, char* teamName2, char* matchFile, char* outputF
     delete [] placeTagged;
 }
 
-void Match::getJetTeamInfo(char* teamName1)
+void Match::getJetTeamInfo(const char* &teamName1)
 {
    fileReader.open(teamName1);
    if(fileReader.is_open())
    {
-       getline (fileReader, TeamName1);//gets the first line of the file and sets the line as a null terminated c-string
+       getline (fileReader, TeamName1);//sets team Name
        fileReader >> teamAmt1;
        jetTeam = new Player[teamAmt1];//creates the "Players" of each team
        for(int i = 0; i < teamAmt1; ++i)
        {
-            jetTeam[i].setTagAmt(0);//initializing data that may not get overwritten just in case there is something in memory at those spots
+            jetTeam[i].setTagAmt(0);//initialize
             jetTeam[i].setPoints(0);
-            fileReader >> fileCodes;//gathers the first int and sets that to the code for each specific player.
+            fileReader >> fileCodes;//sets player codes
             jetTeam[i].setCode(fileCodes);
-            getline(fileReader, playerName);//gathers the rest of the line to set name of the player
+            getline(fileReader, playerName);//sets player names
             jetTeam[i].setName(playerName);
 
        }
@@ -56,7 +56,7 @@ void Match::getJetTeamInfo(char* teamName1)
    }
 }
 
-void Match::getBearTeamInfo(char* teamName2)//same as the other team method
+void Match::getBearTeamInfo(const char* &teamName2)//same as the other team method
 {
    fileReader.open(teamName2);
    if(fileReader.is_open())
@@ -79,20 +79,20 @@ void Match::getBearTeamInfo(char* teamName2)//same as the other team method
    }
 }
 
-void Match::getMatchInfo(char* matchFile)//used to gather the information from the match file and place them into unique arrays to then populate the players specific data
+void Match::getMatchInfo(const char* &matchFile)//gathers match file data
 {
    fileReader.open(matchFile);
    if(fileReader.is_open())
    {
-       fileReader >> tagAmt;//gathers the first character, the amount of tags made
-       taggers = new int[tagAmt];//creates arrays for each unique aspect of data in the match file
+       fileReader >> tagAmt;
+       taggers = new int[tagAmt];
        tagged = new int[tagAmt];
        timeTagged = new int[tagAmt];
        placeTagged = new int[tagAmt];
 
        for(int i = 0; i < tagAmt; ++i)
        {
-           fileReader >> taggers[i];//inputs the data into the arrays from the match file
+           fileReader >> taggers[i];//inputs the data
            fileReader >> tagged[i];
            fileReader >> timeTagged[i];
            fileReader >> placeTagged[i];
@@ -106,7 +106,7 @@ void Match::setPlayerInfo()
 {
     int count1 = 1;
     int count2 = 1;
-    int * tagNum1 = new int [teamAmt1];//creates an array for the amount of tags one specific player has against another specific player
+    int * tagNum1 = new int [teamAmt1];
     int * tagNum2 = new int [teamAmt2];
     for(int a = 0; a < teamAmt1; ++a)
     {
@@ -116,13 +116,13 @@ void Match::setPlayerInfo()
     {
         tagNum2[b] = 1;
     }
-    for(int i = 0; i < tagAmt; ++i)//iterates through the lines of information to set the necessary info for each object
+    for(int i = 0; i < tagAmt; ++i)
     {
-        for(int j = 0; j < teamAmt1; ++j)//iterates through first team to set the taggers
+        for(int j = 0; j < teamAmt1; ++j)//sets taggers
         {
             if(taggers[i] == jetTeam[j].getCode())
             {
-               if(jetTeam[j].getTagAmt() == count1)//checks to make sure the amount of tags info for each player is incrementing correctly
+               if(jetTeam[j].getTagAmt() == count1)//incrementation check
                {
                    count1++;
                }
@@ -143,20 +143,20 @@ void Match::setPlayerInfo()
                {
                   points = 15;
                }
-                   points = jetTeam[j].getPoints() + points;//makes sure the points don't overwrite each other
+                   points = jetTeam[j].getPoints() + points;//points overwrite check
                    jetTeam[j].setPoints(points);
 
 
-               for(int k = 0; k < teamAmt2; ++k)//iterates through the other team's players
+               for(int k = 0; k < teamAmt2; ++k)
                {
-                   if(tagged[i] == bearTeam[k].getCode())//if the code in the tagged array matches a code on the bear team's players
+                   if(tagged[i] == bearTeam[k].getCode())//checks if codes match
                    {
-                       if(jetTeam[j].getCodeTagged(k) > 0)//checks to make sure that if someone has been tagged before that specific tag incremements properly
+                       if(jetTeam[j].getCodeTagged(k) > 0)//incrementation check
                        {
                            tagNum1[j]++;
                        }
-                       jetTeam[j].insertCode(tagged[i], teamAmt2, k);//inserts that code into a vector of the size of the other team to determine who on the jet team tagged who on the bear team
-                       jetTeam[j].insertTags(tagNum1[j], teamAmt2, k);//a separate vector that tracks the amount of tags on each person
+                       jetTeam[j].insertCode(tagged[i], teamAmt2, k);//sets tags
+                       jetTeam[j].insertTags(tagNum1[j], teamAmt2, k);//sets tag amounts
 
                    }
                }
@@ -216,7 +216,7 @@ void Match::setPlayerInfo()
     delete [] tagNum2;
 }
 
-void Match::teamTally()//adds up the scores of each team to then output in the files
+void Match::teamTally()//tallies scores
 {
     jetTeamPoints = 0;
     bearTeamPoints = 0;
@@ -230,7 +230,7 @@ void Match::teamTally()//adds up the scores of each team to then output in the f
     }
 }
 
-void Match::OutputVLow(char* outputFile)
+void Match::OutputVLow(const char* &outputFile)
 {
 
    fileOutput.open(outputFile);
@@ -251,7 +251,7 @@ void Match::OutputVLow(char* outputFile)
    fileOutput.close();
 }
 
-void Match::OutputVMed(char* outputFile)
+void Match::OutputVMed(const char* &outputFile)
 {
     teamTally();
     int bestScore1 = 0;
@@ -269,7 +269,7 @@ void Match::OutputVMed(char* outputFile)
                bestScore1 = jetTeam[i].getPoints();
                bestScore1Name = jetTeam[i].getName();
            }
-           else if(jetTeam[0].getPoints() > jetTeam[i+1].getPoints())//checks to make sure the first element is greater than the the rest, just in case bestScore values are changed away from it
+           else if(jetTeam[0].getPoints() > jetTeam[i+1].getPoints())//sorts
            {
                bestScore1 = jetTeam[0].getPoints();
                bestScore1Name = jetTeam[0].getPoints();
@@ -291,7 +291,7 @@ void Match::OutputVMed(char* outputFile)
                fileOutput << "\t" << jetTeam[i+1].getName() << " had a total of " << jetTeam[i+1].getTagAmt() << " tags" << endl << endl;
 
 
-           if(i == teamAmt1-2)//checks to make sure the minimum value is still printed
+           if(i == teamAmt1-2)//min value check
            {
               for(int x = 0; x < teamAmt1-1; ++x)
               {
@@ -339,7 +339,7 @@ void Match::OutputVMed(char* outputFile)
         else if(bearTeam[j].getTagAmt() == bearTeam[j+1].getTagAmt())
             fileOutput << "\t" << bearTeam[j+1].getName() << " had a total of " << bearTeam[j+1].getTagAmt() << " tags" << endl << endl;
 
-        if(j == teamAmt2-2)//checks to make sure the minimum value is still printed
+        if(j == teamAmt2-2)//min value check
         {
            for(int y = 0; y < teamAmt2-1; ++y)
            {
@@ -377,7 +377,7 @@ void Match::OutputVMed(char* outputFile)
 
 }
 
-void Match::OutputVHigh(char* outputFile)
+void Match::OutputVHigh(const char* &outputFile)
 {
     teamTally();
     fileOutput.open(outputFile);
@@ -418,5 +418,4 @@ void Match::OutputVHigh(char* outputFile)
 
 
 }
-
 
