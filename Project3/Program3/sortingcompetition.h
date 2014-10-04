@@ -47,10 +47,21 @@ public:
     //your sorting algorithm (in other words, did it sort properly?).
     void outputData(const string& outputFileName);
 
+    bool swap(int spot1, int spot2);
+
+    void StringCopy(char *temp, string &wordTemp);
+
+    int partition(int from, int to);
+
+    void Bubble();
+
+    void QuickSort(int from, int to);
+
 private:
     ifstream fileReader;
     vector<char*> words;
     const string inputFileName;
+    //char** wordArray;
 };
 
 #endif // SORTINGCOMPETITION_H
