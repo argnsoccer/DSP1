@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+//Chris Perez and Andre Gras
 using namespace std;
 
 class SortingCompetition
