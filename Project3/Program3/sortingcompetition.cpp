@@ -1,6 +1,6 @@
 #include "sortingcompetition.h"
 
-
+//Chris Perez and Andre Gras
 SortingCompetition::SortingCompetition()
 {
 

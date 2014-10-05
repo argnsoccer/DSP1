@@ -1,6 +1,6 @@
 #include "sortingcompetition.h"
 #include <string>
-
+//Chris Perez and Andre Gras
 int main(int argc, char *argv[])
 {
 
