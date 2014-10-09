@@ -49,7 +49,7 @@ public:
 
     bool swap(int spot1, int spot2);
 
-    void StringCopy(char *temp, string &wordTemp);
+    char* StringCopy(char *temp, string &wordTemp);
 
     int partition(int from, int to);
 
@@ -59,6 +59,7 @@ public:
 
 private:
     ifstream fileReader;
+    ofstream fileOut;
     vector<char*> words;
     const string inputFileName;
     //char** wordArray;

@@ -37,14 +37,14 @@ bool SortingCompetition::readData()
             temp[0] = length[0];
             temp[1] = length[1];
 
-            StringCopy(temp, wordTemp);
+            temp = StringCopy(temp, wordTemp);
 
             words.push_back(temp);
-
-            // delete []temp;
-            // delete []length;
 \
+            //delete []temp;
+            //delete []length;
         }
+
 
     }
     fileReader.close();
@@ -53,31 +53,39 @@ bool SortingCompetition::readData()
 
 void SortingCompetition::sortData()
 {
-    int size = words.size();
-    cout << size << endl;
-    QuickSort(0, size-1);
+    cout << words.size() << endl;
+    QuickSort(0, (words.size())-1);
     //Bubble();
-    char*strlen = new char[2];
 
-    for(int i = 0; i < size; ++i)
+}
+
+void SortingCompetition::outputData(const string &outputFileName)
+{
+    fileOut.open(outputFileName.c_str());
+    char*strlen = new char[2];
+    for(int i = 0; i < words.size()-1; ++i)
     {
         strlen[0] = words[i][0];
         strlen[1] = words[i][1];
         int len = atoi(strlen);
         for(int j = 0; j < len; ++j)
         {
-            cout << words[i][j+2];
+            fileOut << words[i][j+2];
         }
-        cout << endl;
+        fileOut << endl;
     }
+    delete [] strlen;
+    fileOut.close();
 }
 
-void SortingCompetition::StringCopy(char* temp, string& wordTemp)
+char* SortingCompetition::StringCopy(char* temp, string& wordTemp)
 {
-    for(int i = 0; i < wordTemp.length(); ++i)
+    int len = wordTemp.length();
+    for(int i = 0; i < len; ++i)
     {
         temp[i+2] = wordTemp[i];
     }
+    return temp;
 }
 
 bool SortingCompetition::swap(int spot1, int spot2)
