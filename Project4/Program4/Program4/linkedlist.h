@@ -2,6 +2,7 @@
 #define LINKEDLIST_H
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -24,14 +25,16 @@ class LinkedList
          Node* flightIterator;
          int size;
          int index;
+         void destroy(Node* cur);
 
     public: //Constructor | Destructor
          LinkedList();
-         ~LinkedList()
-         {
-             delete head;
-             delete iterator;
-         }
+//         ~LinkedList()
+//         {
+//             destroy(this->head);
+//             //delete iterator;
+//             //delete flightIterator;
+//         }
 
     public: //Member Functions
 
@@ -55,6 +58,8 @@ class LinkedList
 
          bool hasNext();
 
+         bool flightHasNext();
+
          void appendFlights(int index, string &cityName, int cost);
 
          void setHeadFlightName(string &cityName);
@@ -68,6 +73,8 @@ class LinkedList
          void setIndex(int index);
 
          int getIndex();
+
+         string find(string& cityName);
 };
 
 #endif // LINKEDLIST_H

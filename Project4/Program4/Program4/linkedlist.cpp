@@ -1,8 +1,18 @@
+
 #include "linkedlist.h"
 LinkedList::LinkedList() : size(0), index(0)
 {
      head = nullptr;
      iterator = head;
+}
+
+void LinkedList::destroy(Node *cur)
+{
+    if(cur->next != nullptr)
+    {
+        destroy(cur->next);
+    }
+    delete cur;
 }
 
 void LinkedList::setSize(int size)
@@ -25,37 +35,37 @@ int LinkedList::getIndex()
     return index;
 }
 
-void LinkedList::start(string &x)
+void LinkedList::start(string &x)//build linkedlist
 {
     head = new Node;
     head->city = x;
     head->next = nullptr;
+    head->flight = nullptr;
 }
-
-//void LinkedList::setHeadFlightName(string &cityName)
-//{
-//    head->flight->city = cityName;
-//    head->flight->next = nullptr;
-//}
-
-//void LinkedList::setHeadFlightCost(int cost)
-//{
-//    head->flight->flightCost = cost;
-//}
 
 void LinkedList::appendFlights(int index, string &cityName, int cost)
 {
     Node* cur = head;
-    for(int i = 0; i < index; ++i)
+    for(int i = 0; i < index; ++i)//iterate to the origin city you want
     {
         cur = cur->next;
     }
-
-    cur->flight = new Node;
-    cur->flight->city = cityName;
+    if(cur->flight == nullptr)//if no destinations have been made
+    {
+        cur->flight = new Node;//begin flight linked list
+    }
+    else //if flight linked list has been built already
+    {
+        while(cur->flight != nullptr)//iterate to end of flight linkedlist
+        {
+            cur = cur->flight;
+        }
+        cur->flight = new Node;//create new destination
+    }
+    cur->flight->city = cityName;//input data
     cur->flight->flightCost = cost;
 
-    cur->flight->next = nullptr;
+    cur->flight->flight = nullptr;
 }
 
 void LinkedList::append(string &x)
@@ -68,7 +78,7 @@ void LinkedList::append(string &x)
     }
     cur->next = new Node;
     cur->next->city = x;
-
+    cur->next->flight = nullptr;
     cur->next->next = nullptr;
 }
 
@@ -92,7 +102,11 @@ string LinkedList::getCurrentData()
 
 bool LinkedList::hasNext()
 {
-    if(iterator->next != nullptr)
+    if(iterator == nullptr)
+    {
+        return false;
+    }
+    else if(iterator != nullptr)
     {
         return true;
     }
@@ -102,17 +116,27 @@ bool LinkedList::hasNext()
 
 void LinkedList::flightAdvance()
 {
-    flightIterator = flightIterator->next;
+    flightIterator = flightIterator->flight;
+}
+
+bool LinkedList::flightHasNext()
+{
+    if(flightIterator != nullptr)
+    {
+        return true;
+    }
+    else
+        return false;
 }
 
 void LinkedList::setFlightIterator(int index)
 {
     Node* temp = head;
-    for(int i = 0; i < index; ++i)
+    for(int i = 0; i < index; ++i)//get to origin city you want
     {
         temp = temp->next;
     }
-    flightIterator = temp->flight;
+    flightIterator = temp->flight;//set the iterator to point to the flight linked list
 }
 
 string LinkedList::getCurrentFlightCityName()
@@ -123,4 +147,18 @@ string LinkedList::getCurrentFlightCityName()
 int LinkedList::getCurrentFlightCost()
 {
     return flightIterator->flightCost;
+}
+
+string LinkedList::find(string& cityName)
+{
+    reset();
+    while(this->hasNext())
+    {
+        if(this->getCurrentData() == cityName)
+        {
+            return (this->getCurrentData());
+        }
+        else
+            this->advance();
+    }
 }
